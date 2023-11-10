@@ -1,0 +1,34 @@
+﻿namespace ConsoleApp1
+{
+    class Account
+    {
+        public delegate void AccountHandler(string message);
+       // public delegate void AccountHandler(int number);
+        public event AccountHandler Notify;              // 1.Определение события
+        public event AccountHandler CustumNotify;
+
+        public Account(int sum)
+        {
+            Sum = sum;
+        }
+
+        public int Sum { get; private set; }
+        public void Put(int sum)
+        {
+            Sum += sum;
+            Notify?.Invoke($"На счет поступило: {sum}");   // 2.Вызов события 
+        }
+        public void Take(int sum)
+        {
+            if (Sum >= sum)
+            {
+                Sum -= sum;
+                Notify?.Invoke($"Со счета снято: {sum}");   // 2.Вызов события
+            }
+            else
+            {
+                Notify?.Invoke($"Недостаточно денег на счете. Текущий баланс: {Sum}"); ;
+            }
+        }
+    }
+}
