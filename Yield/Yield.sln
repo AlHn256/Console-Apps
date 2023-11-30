@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yield", "Yield\Yield.csproj", "{420F9F9A-D82A-40AA-B57D-8D442AE80BE9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{420F9F9A-D82A-40AA-B57D-8D442AE80BE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{420F9F9A-D82A-40AA-B57D-8D442AE80BE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{420F9F9A-D82A-40AA-B57D-8D442AE80BE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{420F9F9A-D82A-40AA-B57D-8D442AE80BE9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {45D2531A-518A-4EB5-823D-2F0AA0F94723}
+	EndGlobalSection
+EndGlobal

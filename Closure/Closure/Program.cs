@@ -11,13 +11,12 @@ namespace Closure
 
 			string str = someFunc("StrTest");
 			Console.WriteLine(str);
-
 		}
 
 		static void Closure()
 		{
 			var fn = Outer();   // fn = Inner, так как метод Outer возвращает функцию Inner
-								// вызываем внутреннюю функцию Inner
+			// вызываем внутреннюю функцию Inner
 			fn();   // 6
 			fn();   // 7
 			fn();   // 8
@@ -36,7 +35,7 @@ namespace Closure
 			int x = 5;  // лексическое окружение - локальная переменная
 			void Inner()    // локальная функция
 			{
-				      // операции с лексическим окружением
+				// операции с лексическим окружением
 				Console.WriteLine(++x);
 			}
 			return Inner;   // возвращаем локальную функцию
@@ -50,6 +49,7 @@ namespace Closure
 			}
 			return Inner;
 		}
+
 		delegate int Operation(int n);
 
 		static Func<string, string> someFunc = delegate (string someString)

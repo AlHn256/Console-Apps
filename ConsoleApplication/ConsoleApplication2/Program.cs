@@ -97,6 +97,8 @@ namespace ConsoleApp1
             HashSetFunction(); 
             Console.WriteLine("\n#### Dictionary ####\n");
             Dictionary();
+            Console.WriteLine("\n#DictionarySpeedTest#\n");
+            DictionarySpeedTest();
             Console.WriteLine("\n###### Queue #######\n");
             Queue();
             Console.WriteLine("\n###### Stack #######\n");
@@ -180,14 +182,14 @@ namespace ConsoleApp1
             StringBuilder();
             Console.WriteLine("\n#### ProgramTest ####\n");
             ProgramTest();
-            Console.WriteLine("\n### Readonly ###\n");
-            Readonly();
+            Console.WriteLine("\n### ReadonlyTest ####\n");
+            ReadonlyTest();
             Console.WriteLine("\n#### Test01 ####\n");
             Test01();
             Console.WriteLine("\n#### Test02 ####\n");
             Test02();
-            Console.WriteLine("\n#### Test03 ####\n");
-            Test03();
+            //Console.WriteLine("\n#### Test03 ####\n");
+            //Test03();
             Console.WriteLine("\n#### Test04 ####\n");
             Test04();
             Console.WriteLine("\n#### Test05 ####\n");
@@ -195,7 +197,9 @@ namespace ConsoleApp1
             Console.WriteLine("\n#### Test06 ####\n");
             Test06();
             Console.WriteLine("\n#### Test07 ####\n");
-            Test07();
+            Test07(); 
+            Console.WriteLine("\n#### Test08 ####\n");
+            Test08();
             Console.WriteLine("\n#### Test09 ####\n");
             Test09();
             Console.WriteLine("\n#### Test11 ####\n");
@@ -1146,10 +1150,49 @@ namespace ConsoleApp1
 
             Console.WriteLine("\nSort Dictionary by Key\n");
             //countries = countries.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
-            
 
             foreach (KeyValuePair<int, string> keyValue in countries) Console.WriteLine(keyValue.Key + " - " + keyValue.Value);
             //foreach (var item in dic) Console.WriteLine(item.Key);
+        }
+
+        private static void DictionarySpeedTest()
+        {
+            AddItems(new Dictionary<int, int>());
+        }
+
+            private static void AddItems<T>(T dictionary) where T : IDictionary<int, int>
+        {
+            var watch = Stopwatch.StartNew();
+            for (int i = 0; i < 1000000; i++)
+            {
+                dictionary.Add(i, i);
+            }
+            watch.Stop();
+            Console.WriteLine(typeof(T) + " \nInsert operation: " + watch.ElapsedMilliseconds);
+
+            watch.Restart();
+            for (int i = 0; i < 1000000; i++)
+            {
+                var item = dictionary[i];
+            }
+            watch.Stop();
+            Console.WriteLine(typeof(T) + " \nForeach operation: " + watch.ElapsedMilliseconds);
+
+            watch.Restart();
+            for (int i = 0; i < 1000000; i++)
+            {
+                dictionary[i] = Int32.MaxValue;
+            }
+            watch.Stop();
+            Console.WriteLine(typeof(T) + " \nUpdate operation: " + watch.ElapsedMilliseconds);
+
+            watch.Restart();
+            for (int i = 0; i < 1000000; i++)
+            {
+                dictionary.Remove(dictionary[i]);
+            }
+            watch.Stop();
+            Console.WriteLine(typeof(T) + " \nremove operation: " + watch.ElapsedMilliseconds);
         }
 
         private static void Function15()
@@ -1851,7 +1894,6 @@ namespace ConsoleApp1
             a();
         }
 
-
         private static void Action()
         {
             var actions = new List<Action>();
@@ -1925,8 +1967,9 @@ namespace ConsoleApp1
 			public string name = "Ben";
 			public int age = 18;
 			public string email = "ben@gmail.com";
+            public int ageqwe ;
 
-			public NewPerson2(string name)
+            public NewPerson2(string name)
 			{
 				this.name = name;
 			}
@@ -1938,7 +1981,13 @@ namespace ConsoleApp1
 			{
 				this.email = email;
 			}
-		}
+
+            public NewPerson2(string name, string email) : this(name)
+            {
+                this.name = name;
+                this.email = email;
+            }
+        }
 
 		private static void Function22()
 		{
@@ -2089,9 +2138,6 @@ namespace ConsoleApp1
 			Console.WriteLine(0 / 0.0 == 0 / 0.0); //False
 		}
 
-		public class An { }
-		public class Bn:An { }
-
 		private static void Test02()
 		{
 			object n = 1;
@@ -2118,55 +2164,16 @@ namespace ConsoleApp1
 			Bn c = (Bn)b;
 			Console.WriteLine("c == null " + c == null);
 		}
+        public class An { }
+        public class Bn : An { }
 
-		private static void Test03()
-		{
-			//Age age = new Age(456);
-			Age age;
-			Age2 age2 = new Age2(2341);
-		}
-
-
-        private static void Readonly()
+        private static void ReadonlyTest()
         {
-            Age age = new Age(123);
+            //Age age = new Age(456);
+            Age age;
+            age = new Age(123);
             Age2 age2 = new Age2(123);
-
             age2.ChangeYear();
-        }
-
-        class Age
-        {
-            readonly string name = "Tom";
-            readonly int year;
-            public Age(int year)
-            {
-                this.year = year;
-                this.name = "Bill";
-            }
-
-
-            public static void ChangeData()
-            {
-                //this.name = "Bill"; // Compile error if uncommented.
-                //this.year = 1967; // Compile error if uncommented.
-            }
-        }
-
-        class Age2
-        {
-            //public static const double KOEF = 4.5; // const cannot be static
-            public const double KOEF = 4.5; // const cannot be static
-
-            readonly int year;
-            public Age2(int year)
-            {
-                this.year = year;
-            }
-            public void ChangeYear()
-            {
-                //this.year = 1967; // Compile error if uncommented.
-            }
         }
 
         private static void Test04()
@@ -2358,10 +2365,6 @@ namespace ConsoleApp1
                 Console.WriteLine("Hee Haw");
             }
         }
-
-	
-
-
 
 
 		class Vehicle
@@ -2610,6 +2613,23 @@ namespace ConsoleApp1
 			}
 		}
 
+        //class A { }
+        //class B : A
+        //{ }
+
+        private static void Test08()
+        {
+            A a = new A();
+            B b = new B();
+            //Какая из этих строчек скомпилируется?
+            if (a is B == null) { }
+            if (a is B) { }
+            if (a as B == null) { }
+            //if (a is typeof(B) ) { }
+            //if (a is b) { }
+            if (a is B) { }
+        }
+
 		private static void Test09()
 		{
 			D d = new D(1) { i = 2 };
@@ -2620,13 +2640,16 @@ namespace ConsoleApp1
         {
             try
             {
+                int[] arr = new int[2];
                 string str = null;
+                //arr[2] = 0;
                 Console.WriteLine("TRY"+str.Length);
                 throw new Exception("Exeption");
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 Console.WriteLine("CATCH");
+                //throw ex;
             }
         }
 
@@ -2824,8 +2847,6 @@ namespace ConsoleApp1
             Console.WriteLine("Paramse Summ " + paramse.Summ(1, 2, 3, 4, 5, 6, 7, 8, 9, 0));
 			paramse.ShowObjects("text", 5, 'e', 5.89, 64, true);
         }
-
-
 
         //public class MyBaseC
         //{

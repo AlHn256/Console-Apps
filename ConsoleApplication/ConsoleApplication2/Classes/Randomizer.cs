@@ -5,12 +5,11 @@ namespace ConsoleApp1
 {
     class Randomizer
     {
-        private static string[] NameList = new string[] {"Bob","Tom", "Dgeck", "Bil", "Petr","Anastassia","Natalia","Ivan"
-            ,"Matti","Finn","Karl","Vacia"};
+        private static Random random = new Random();
+        private static string[] NameList = new string[] {"Bob","Tom", "Dgeck", "Bil", "Petr","Anastassia","Natalia","Ivan","Matti","Finn","Karl","Vacia"};
         private static string[] CityList = new string[] { "Helsinki", "Seattle", "Walla", "Stavanger", "Sandnes", "Liverpool" };
         private static string[] CountryList = new string[] { "Finland", "Poland", "UK", "USA", "RUSSIA", "Norway" };
-
-        private static Random random = new Random();
+        private static string[] cars = { "Alfa Romeo", "Aston Martin", "Audi", "Nissan", "Chevrolet",  "Chrysler", "Dodge", "BMW", "Ferrari",  "Bentley", "Ford", "Lexus","Mercedes", "Toyota", "Volvo", "Subaru", "Жигули :)"};
 
         public static string GetRandName()
         {
