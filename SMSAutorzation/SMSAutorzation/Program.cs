@@ -6,15 +6,12 @@ class Sample
 {
     public static void Main()
     {
-        Random rnd = new Random();
-
-        //var  value = rnd.Next(1000, 9999);
-        int value = 9911;
-        var zadarma = new ZadarmaApi("997029", "xuH2tc69Lm");
+        int value = new Random().Next(1000, 9999);
+        var zadarma = new ZadarmaApi("509289a01f9aa4e0a1e4", "99def24c62f06517cfa6");
         var parameters = new SortedDictionary<string, string>()
          {
-             {"caller_id", "74951234567"},
-             {"to", "79207670502"},
+             {"caller_id", "79207670502"},
+             {"to", "444455"},
              {"code", value.ToString()},
              {"lang", "ru"}
          };
