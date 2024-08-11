@@ -38,6 +38,10 @@ namespace ConsoleApp1
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
+            RandomTableFilling();
+            //SQLCreatePurchaseTable();
+
+            return;
             Console.WriteLine("GetB - " + a);
             Console.WriteLine(Program.x);
             Console.WriteLine(Program.y);
@@ -1278,6 +1282,58 @@ namespace ConsoleApp1
             catch (Exception e)
             {
                 Console.WriteLine("exception occured while creating table:" + e.Message + "\t" + e.GetType());
+            }
+        }
+
+        private static void SQLCreatePurchaseTable()
+        {
+            try
+            {
+                SqlConnection conn = new SqlConnection(connectionString);
+                //SqlCommand cmd = new SqlCommand("CREATE TABLE Persons (ID int NOT NULL PRIMARY KEY,LastName varchar(255),FirstName varchar(255),Address varchar(255),City varchar(255));", conn);
+                SqlCommand cmd = new SqlCommand("CREATE TABLE Purchase (" +
+                                                "id_client int NOT NULL," +
+                                                "purchase_time DATE NOT NULL," +
+                                                "id_purchase int NOT NULL," +
+                                                "gmv_purchase int NOT NULL)", conn);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                Console.WriteLine("Table Created Successfully...");
+                conn.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("exception occured while creating table:" + e.Message + "\t" + e.GetType());
+            }
+        }
+
+        private static void RandomTableFilling()
+        {
+            List<int> id_clientList = new List<int>();
+            for (int i = 0; i < 20; i++)id_clientList.Add(i);
+
+            var Date = DateTime.Now.AddYears(-1);
+            for (int i = 0; i < 800; i++)
+                RandomTableFilling(id_clientList[Randomizer.GetRandInt(20)].ToString(), Randomizer.GetRandDate(Date).ToString()); ;
+        }
+        private static void Ra ing(string id_client,string purchase_time)
+        {
+            try
+            {
+                SqlConnection conn = new SqlConnection(connectionString);
+                string SqlComand = "INSERT INTO Purchase (id_client, purchase_time, id_purchase, gmv_purchase) VALUES"+
+                 "(" + id_client + ",'" + purchase_time + "', '" + Randomizer.GetRandInt(1000) + "', '" + Randomizer.GetRandInt(10000) + "')";
+
+                Console.WriteLine(" SqlComand " + SqlComand);
+                SqlCommand cmd = new SqlCommand(SqlComand, conn);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                Console.WriteLine("Info insert successfully...");
+                conn.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Err: " + e.Message + "\t" + e.GetType());
             }
         }
 
