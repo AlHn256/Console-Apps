@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -37,11 +38,10 @@ namespace ConsoleApp1
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-            RandomTableFilling();
-            //SQLCreatePurchaseTable();
+            Func<int, Int64> fact = null;
+            fact = x=> x > 1 ? x * fact(x - 1) : 1;
 
-            return;
+            Console.WriteLine("Hello World!");
             Console.WriteLine("GetB - " + a);
             Console.WriteLine(Program.x);
             Console.WriteLine(Program.y);
@@ -49,6 +49,8 @@ namespace ConsoleApp1
             Console.WriteLine(Program.x);
             Console.WriteLine("\n##### Equals #####\n");
             Equals();
+            Console.WriteLine("\n#####  LineAv ####\n");
+            LineAv();// Линейное выравнивание
             Console.WriteLine("\n##SingletonStart##\n");
             SingletonStart();
             Console.WriteLine("\n##SingltoneStart##\n");
@@ -144,8 +146,8 @@ namespace ConsoleApp1
 
             //Console.WriteLine("\n## SQLCreateTable ##\n");
             //SQLCreateTable();
-            Console.WriteLine("\n SQLCreateSecondTable \n");
-            SQLCreateSecondTable();
+            //Console.WriteLine("\n SQLCreateSecondTable \n");
+            //SQLCreateSecondTable();
             //Console.WriteLine("\n# SQL RandomTableFilling #\n");
             //RandomTableFilling(10);
             //SQL operation
@@ -249,8 +251,13 @@ namespace ConsoleApp1
             Console.WriteLine("\n#### MassivTest ###\n");
             MassivTest();
             Console.WriteLine("\n######## DateTest #########\n");
-            DateTest();
-
+            DateTest();            
+            Console.WriteLine("\n######### Tuple ###########\n");
+            Tuple();            
+            Console.WriteLine("\n###### TuplExchange ########\n");
+            TuplExchange();
+            Console.WriteLine("\n##### ReflectionTest ######\n");
+            ReflectionTest();
             Console.WriteLine("\n### SaySomething ###\n");
             SaySomething();
             //Console.WriteLine("\n### PrintAsync ###\n");
@@ -265,6 +272,10 @@ namespace ConsoleApp1
             TreadStart();
             Console.WriteLine("\n#### TreadTest #####\n");
             TreadTest();
+            Console.WriteLine("\n### TaskWrapper ####\n");
+            TaskWrapper();
+            Console.WriteLine("\n# CancellationToken #\n");
+            CancellationToken();
             Console.WriteLine("\n########## End ###########\n");
             Console.ReadKey();
         }
@@ -279,9 +290,43 @@ namespace ConsoleApp1
             }
         }
 
+
+        private static void LineAv()
+        {
+            List<double> m = new List<double> { 5.3, 1.2, 5.3, 2.5, 3.4, 17.3, 32.4, 5.4, 55.7 };
+            var line = LineAveraging(m, 1);
+        }
+
+        private static List<double> LineAveraging(List<double> line, int N = 10)
+        {
+            if (N > line.Count-1) N = line.Count-1;
+            if (N < 2) N = 2;
+            bool isEven = (N % 2) == 0 ? true:false;
+            List<double> result = new List<double>();
+            Queue<double> queue = new Queue<double>();
+            int n = 0;
+            bool deque = false;
+
+            while (true)
+            {
+                if(n< line.Count) queue.Enqueue(line[n++]);
+                if (queue.Count > N && deque != true) deque = true;
+                if (deque) queue.Dequeue();
+                if (queue.Count == 0 || result.Count == line.Count) break;
+
+                if (isEven)
+                {
+                    if (queue.Count >= N / 2) result.Add(queue.Sum() / queue.Count);
+                }
+                else
+                {
+                    if (queue.Count >= N / 2 + 1 || (result.Count == N-1 && N == line.Count)) result.Add(queue.Sum() / queue.Count);
+                }
+            }
+            return result;
+        }
         private static void Equals()
         {
-
             string Text1 = "Text";
             string Text2 = "Text";
 
@@ -535,15 +580,6 @@ namespace ConsoleApp1
             //z.Print4();
         }
 
-        static IEnumerable<int> Square(IEnumerable<int> a)
-        {
-            foreach (var r in a)
-            {
-                Console.WriteLine(r * r);
-                yield return r * r;
-            }
-        }
-
         class Wrap
         {
             private static int init = 0;
@@ -552,7 +588,14 @@ namespace ConsoleApp1
                 get { return ++init; }
             }
         }
-
+        static IEnumerable<int> Square(IEnumerable<int> a)
+        {
+            foreach (var r in a)
+            {
+                Console.WriteLine(r * r);
+                yield return r * r;
+            }
+        }
         private static void Function7()
         {
             var w = new Wrap();
@@ -569,14 +612,10 @@ namespace ConsoleApp1
 
             Console.WriteLine("\nValues");
             var values = wraps.Select(x => x.Value);
-            foreach (var v in values)
-            {
-                Console.WriteLine("v {0}", v);
-            }
+            foreach (var v in values) Console.WriteLine("v {0}", v);
 
             Console.WriteLine("\nResults");
             var results = Square(values);
-
             Console.WriteLine("\nSum Count");
             int sum = 0;
             int count = 0;
@@ -590,7 +629,6 @@ namespace ConsoleApp1
 
             Console.WriteLine("Count {0}", count);
             Console.WriteLine("Sum {0}", sum);
-
             Console.WriteLine("Count {0}", results.Count());
             Console.WriteLine("Sum {0}", results.Sum());
         }
@@ -602,7 +640,6 @@ namespace ConsoleApp1
             long epoch = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000000;
             Console.WriteLine("epoch {0}", epoch);
         }
-
         private static void Function8()
         {
             var list = new List<int>();
@@ -626,7 +663,7 @@ namespace ConsoleApp1
 
         private static void Function10()
         {
-            int[] Arr = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            int[] Arr = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
             long TotalArr = TotalAllEvenNumbers(Arr);
             Console.WriteLine("Сумма всех чётных чисел в массиве {0}", TotalArr);
         }
@@ -739,7 +776,16 @@ namespace ConsoleApp1
             // Используем второй прототип
             Console.WriteLine("Наличие элемента в коллекции Cars, начинающегося c \"X\": " + cars.Any(s => s.StartsWith("X")));
         }
-
+        public class Company
+        {
+            public string Name { get; set; }
+            public List<Person> Staff { get; set; }
+            public Company(string name, List<Person> staff)
+            {
+                Name = name;
+                Staff = staff;
+            }
+        }
 
         private static void Linq3()
         {
@@ -760,13 +806,24 @@ namespace ConsoleApp1
 
             Console.WriteLine("======");
 
-            selectedUsers = users.SelectMany(u => u.Languages,
-                            (u, l) => new { User = u, Lang = l })
+            selectedUsers = users.SelectMany(u => u.Languages, (u, l) => new { User = u, Lang = l })
                           .Where(u => u.Lang == "английский" && u.User.Age < 28)
                           .Select(u => u.User);
 
             foreach (NewUser user in selectedUsers)
                 Console.WriteLine($"{user.Name} - {user.Age}");
+
+            Console.WriteLine("======");
+
+            var companies = new List<Company>
+                {
+                new Company("Microsoft", new List<Person> {new Person("Tom",5), new Person("Bob",12)}),
+                new Company("Google", new List<Person> {new Person("Sam",51), new Person("Mike",53), new Person("Stan",15), new Person("Kyle",16)}),
+                new Company("Microsoft", new List<Person> {new Person("Jek",5), new Person("Tom",45), new Person("Alex",32), new Person("Queny",11)}),
+                };
+            var employees = companies.SelectMany(c => c.Staff).Select(x=>x.Name).Distinct();
+            foreach (var emp in employees) Console.WriteLine(emp);
+            //foreach (var emp in employees) Console.WriteLine($"{emp.Name}");
 
             Console.WriteLine("======");
 
@@ -818,12 +875,13 @@ namespace ConsoleApp1
         private static void LinqTest()
         {
             var list = new List<int> { 1, 2, 3, 4, 5, 6 };
+            int i = 0;
             var TestList = list
                   .Select(
                       t =>
                       {
                           Console.WriteLine($"Process item {t}");
-
+                          i++;
                           return t * 3;
                       }).ToArray();
 
@@ -1033,7 +1091,6 @@ namespace ConsoleApp1
             }
             Console.Write(" {0}", summ);
         }
-
 
         private static void TextDivision()
         {
@@ -1282,58 +1339,6 @@ namespace ConsoleApp1
             catch (Exception e)
             {
                 Console.WriteLine("exception occured while creating table:" + e.Message + "\t" + e.GetType());
-            }
-        }
-
-        private static void SQLCreatePurchaseTable()
-        {
-            try
-            {
-                SqlConnection conn = new SqlConnection(connectionString);
-                //SqlCommand cmd = new SqlCommand("CREATE TABLE Persons (ID int NOT NULL PRIMARY KEY,LastName varchar(255),FirstName varchar(255),Address varchar(255),City varchar(255));", conn);
-                SqlCommand cmd = new SqlCommand("CREATE TABLE Purchase (" +
-                                                "id_client int NOT NULL," +
-                                                "purchase_time DATE NOT NULL," +
-                                                "id_purchase int NOT NULL," +
-                                                "gmv_purchase int NOT NULL)", conn);
-                conn.Open();
-                cmd.ExecuteNonQuery();
-                Console.WriteLine("Table Created Successfully...");
-                conn.Close();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("exception occured while creating table:" + e.Message + "\t" + e.GetType());
-            }
-        }
-
-        private static void RandomTableFilling()
-        {
-            List<int> id_clientList = new List<int>();
-            for (int i = 0; i < 20; i++)id_clientList.Add(i);
-
-            var Date = DateTime.Now.AddYears(-1);
-            for (int i = 0; i < 800; i++)
-                RandomTableFilling(id_clientList[Randomizer.GetRandInt(20)].ToString(), Randomizer.GetRandDate(Date).ToString()); ;
-        }
-        private static void Ra ing(string id_client,string purchase_time)
-        {
-            try
-            {
-                SqlConnection conn = new SqlConnection(connectionString);
-                string SqlComand = "INSERT INTO Purchase (id_client, purchase_time, id_purchase, gmv_purchase) VALUES"+
-                 "(" + id_client + ",'" + purchase_time + "', '" + Randomizer.GetRandInt(1000) + "', '" + Randomizer.GetRandInt(10000) + "')";
-
-                Console.WriteLine(" SqlComand " + SqlComand);
-                SqlCommand cmd = new SqlCommand(SqlComand, conn);
-                conn.Open();
-                cmd.ExecuteNonQuery();
-                Console.WriteLine("Info insert successfully...");
-                conn.Close();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Err: " + e.Message + "\t" + e.GetType());
             }
         }
 
@@ -1852,7 +1857,6 @@ namespace ConsoleApp1
             for (int i = 0; i < 10; i++)
                 Console.WriteLine("Tr 2:" + i);
         }
-
         private static async void TreadStart()
         {
             Thread t1 = new Thread(new ThreadStart(Tr1));
@@ -1908,8 +1912,65 @@ namespace ConsoleApp1
 			result = 28 * 48;
 			Console.WriteLine($" Pizza 48x28cm " + Math.Round(result, 2));
 		}
+        private static async void TaskWrapper()
+        {
+            MyClass2 myObject = new MyClass2();
 
-		private static void Function19()
+            // Create a task wrapper for the DoSomething method
+            Task task1 = Task.Run(() => myObject.DoSomething());
+
+            // Create a task wrapper for the Calculate method
+            Task<int> task2 = Task.Run(() => myObject.Calculate(5, 10));
+
+            // Wait for the tasks to complete
+            await Task.WhenAll(task1, task2);
+
+            Console.WriteLine("Tasks completed.");
+        }
+        class MyClass2
+        {
+            public void DoSomething()
+            {
+                Console.WriteLine("Doing something...");
+            }
+
+            public int Calculate(int x, int y)
+            {
+                return x + y;
+            }
+        }
+        private static async void CancellationToken()
+        {
+            var existingObject = new ExistingObject();
+            var cancellationTokenSource = new CancellationTokenSource();
+            Console.WriteLine("Start tsk");
+            var taskWrapper = Task.Run(() => WrapExistingObject(existingObject, cancellationTokenSource.Token));
+
+            // Your main logic here
+            Thread.Sleep(200);
+
+            Console.WriteLine("Cancel tsk");
+            cancellationTokenSource.Cancel();
+            await taskWrapper;
+        }
+
+        static void WrapExistingObject(ExistingObject existingObject, CancellationToken cancellationToken)
+        {
+            // Wrapper logic with cancellation token
+            //if (!cancellationToken.IsCancellationRequested)
+            //    Console.WriteLine(existingObject.GetData());
+            int i =0;
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                Console.WriteLine(existingObject.GetData() +" i - "+ i++);
+            }
+        }
+        class ExistingObject
+        {
+            public string GetData() => "Data from ExistingObject";
+        }
+
+        private static void Function19()
 		{
 			int a = 10; int b = 4;
 			int c = a % b;
@@ -1949,7 +2010,6 @@ namespace ConsoleApp1
             x = 100;
             a();
         }
-
         private static void Action()
         {
             var actions = new List<Action>();
@@ -2708,14 +2768,12 @@ namespace ConsoleApp1
                 //throw ex;
             }
         }
-
         private static void Test11()
 		{
 			int a = 1, b = 2;
 			Swap(a, b);
 			Console.WriteLine("a {0} b {1}", a, b);
 		}
-
 		private static void Swap(int a, int b)
 		{
 			int c = a;
@@ -2758,7 +2816,7 @@ namespace ConsoleApp1
 
 		private static void Test14()
 		{
-			M1 m1 = new M1(1) {i=2};
+            M1 m1 = new M1(1) {i=2};
 			try
 			{
 				Calc();
@@ -2792,8 +2850,6 @@ namespace ConsoleApp1
         }
 
 
-
-
         class MyCustomException : DivideByZeroException
 		{
 
@@ -2815,7 +2871,7 @@ namespace ConsoleApp1
 			//}
 			catch (Exception e)
 			{
-				Console.WriteLine("Catch Exception");
+				Console.WriteLine("Calc().Catch Exception");
 				throw;
 			}
 			//finally
@@ -3292,8 +3348,6 @@ namespace ConsoleApp1
 			Vk1 = 9912.1;
 			List<Variant> variantsList = new List<Variant>();
 
-
-
 			Console.WriteLine(" +   |    | 10 | 9.9 | ");
 			for (int i = nshMin; i < nshMax; i++)
 			{
@@ -3367,7 +3421,6 @@ namespace ConsoleApp1
 			var m = Regex.Match(allDigitFromPassword, @"\d{6}");
 			var asd = m.Groups.Count;
 
-
 			Console.WriteLine("text " + text);
 			Console.WriteLine("digit " + allDigitFromPassword);
 			Console.WriteLine("BirthDate " + userBirthDate);
@@ -3396,8 +3449,12 @@ namespace ConsoleApp1
 					if (birthDate == userBirthDate) Console.Write(" : + " + birthDate);
 					else Console.Write(" : -");
 
-					Console.WriteLine("");
 
+                    string formatString = "    {0,10} ({0,8:X8})\n" + "And {1,10} ({1,8:X8})\n" + "  = {2,10} ({2,8:X8})";
+                    int value1 = 16932;
+                    int value2 = 15421;
+                    string result = String.Format(formatString, value1, value2, value1 & value2);
+                    Console.WriteLine("\n"+result);
 				}
 
 				//foreach (var pair in allDigitFromPassword.Select((x, i) => new { Index = i, Value = x }))
@@ -3430,8 +3487,6 @@ namespace ConsoleApp1
 			//    //Console.WriteLine(m.Index);
 			//}
 		}
-
-
 
 		private static void TextDigitDivision()
 		{
@@ -3541,9 +3596,36 @@ namespace ConsoleApp1
 			Console.WriteLine(date2.Date.ToString()); //10/18/2018 12:00:00 AM
 		}
 
+        
+        private static void ReflectionTest()
+        {
+            var sample = new Sample();
+            Console.Write(sample);
+            typeof(Sample).GetField("_x", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(sample, "I change you...\n");
+            Console.Write(sample);
+        }
+		private static void TuplExchange()
+        {
+            int x = 1, y = 2;
+            Console.WriteLine($"X{x} - Y{y}\n");
+            (x, y) = (y, x);
+            Console.WriteLine($"X{x} - Y{y}\n");
+        }
+		private static void Tuple()
+		{
+            var tuple1 = Method(); // Присваиваем кортежу tuple1 возвращаемое значение
+            Console.WriteLine(tuple1.Item1);
+            Console.WriteLine(tuple1.Item2);
+            Console.WriteLine(tuple1.Item3);
+        }
+
+        private static (int, int, string) Method()  //Метод, возвращающий кортеж
+        {
+            var res = (5, 10,"Test Text");
+            return res;
+        }
     }
 }
-
 
 public static class StringExtension
     {
@@ -3552,8 +3634,7 @@ public static class StringExtension
             int counter = 0;
             for (int i = 0; i < str.Length; i++)
             {
-                if (str[i] == c)
-                    counter++;
+                if (str[i] == c)counter++;
             }
             return counter;
         }
