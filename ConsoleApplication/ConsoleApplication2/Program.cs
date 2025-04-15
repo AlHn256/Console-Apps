@@ -272,10 +272,12 @@ namespace ConsoleApp1
             TreadStart();
             Console.WriteLine("\n#### TreadTest #####\n");
             TreadTest();
-            Console.WriteLine("\n### TaskWrapper ####\n");
-            TaskWrapper();
-            Console.WriteLine("\n# CancellationToken #\n");
-            CancellationToken();
+            Console.WriteLine("\n#### ThreadPool #####\n");
+            ThreadPoolExpl();
+            //Console.WriteLine("\n### TaskWrapper ####\n");
+            //TaskWrapper();
+            //Console.WriteLine("\n# CancellationToken #\n");
+            //CancellationToken();
             Console.WriteLine("\n########## End ###########\n");
             Console.ReadKey();
         }
@@ -1897,6 +1899,35 @@ namespace ConsoleApp1
             }
         }
 
+        static void ThreadPoolExpl()
+        {
+            int maxWorkerThreads;
+            int maxCompletionThreads;
+
+            // Get the maximum number of completion threads
+            ThreadPool.GetMaxThreads(out maxWorkerThreads, out maxCompletionThreads);
+
+            // Set the new max worker threads, but keep the old max completion threads
+            ThreadPool.SetMaxThreads(2, maxCompletionThreads);
+
+            // Queue the task.
+            for (int i = 0; i < 100; i++)
+            {
+                ThreadPool.QueueUserWorkItem(ThreadProc);
+            }
+            Console.WriteLine("Main thread does some work, then sleeps.");
+            Thread.Sleep(11000);
+            Console.WriteLine("Main thread exits.");
+        }
+        // 13500 1000x100
+        //int x = 0;
+        // This thread procedure performs the task.
+        static void ThreadProc(Object stateInfo)
+        {
+            // No state object was passed to QueueUserWorkItem, so stateInfo is null.
+            Thread.Sleep(3000);
+            Console.WriteLine("Hello from the thread pool."+ x++);
+        }
 
     public const double PI = 3.1415926535897931;
 		private static void OperationPizza()
